@@ -1,5 +1,8 @@
 # WEB API CRUD OPERATIONS USING FLASK AND MYSQL
 
+MEMBER 1 - PIYUSH JAGTAP
+MEMBER 2 - RAKESH PUPPALA
+
 # DATABASE STRUCTURE
   ```bash
     Download MYSQL Workbench and set the databse structure according to below schema
