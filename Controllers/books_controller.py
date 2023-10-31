@@ -10,24 +10,20 @@ auth = auth_model()
 
 @app.route("/books/all")
 def get_all_books():
-    return bookObject.all_book_model()
+    return bookObject.get_all_books_data()
 
 @app.route("/book/add", methods=["POST"])
 @auth.token_auth()
 def add_book():
-    return bookObject.add_book_model(request.form)
+    return bookObject.add_book_data(request.form)
 
 @app.route("/book/delete/<id>", methods=["DELETE"])
 def delete_book(id):
     print(request.form)
     print(id)
-    return bookObject.delete_book_model(id)
+    return bookObject.delete_book_data(id)
 
 @app.route("/book/update/<id>", methods=["PUT"])
 def update_book(id):
     print(request.form)
-    return bookObject.update_book_model(request.form, id)
-
-@app.route("/book/patch", methods=["PATCH"])
-def patch_book():
-    return bookObject.patch_user_model(request.form)
+    return bookObject.update_book_data(request.form, id)

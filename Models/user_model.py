@@ -11,7 +11,7 @@ class user_model():
         self.con.autocommit=True
         self.cur = self.con.cursor(dictionary=True)
         
-    def all_user_model(self):
+    def get_all_users_data(self):
         self.cur.execute("SELECT * FROM users")
         result = self.cur.fetchall()
         print(result)
@@ -20,7 +20,7 @@ class user_model():
         else:
             return "No Data Found"
         
-    def get_user_model(self, id):
+    def get_user_data(self, id):
         self.cur.execute(f"SELECT * FROM users WHERE id={id}")
         result = self.cur.fetchall()
         print(result)
@@ -29,19 +29,18 @@ class user_model():
         else:
             return "User does not exist"
         
-    def add_user_model(self,data):
+    def add_user_data(self,data):
         self.cur.execute(f"INSERT INTO users(name, email, phone, role, password) VALUES('{data['name']}', '{data['email']}', '{data['phone']}', '{data['role']}', '{data['password']}')")
         return make_response({"message":"CREATED_SUCCESSFULLY"},201)
 
-    def delete_user_model(self,id):
+    def delete_user_data(self,id):
         self.cur.execute(f"DELETE FROM users WHERE id={id}")
         if self.cur.rowcount>0:
             return make_response({"message":"DELETED_SUCCESSFULLY"},202)
         else:
-            return make_response({"message":"CONTACT_DEVELOPER"},500)
-        
+            return make_response({"message":"Server Error"},500)
     
-    def update_user_model(self,data, id):
+    def update_user_data(self,data, id):
         self.cur.execute(f"UPDATE users SET name='{data['name']}', email='{data['email']}', phone='{data['phone']}', role='{data['role']}',password='{data['password']}', avatar='{data['avatar']}' WHERE id={id}")
         if self.cur.rowcount>0:
             return make_response({"message":"UPDATED_SUCCESSFULLY"},201)
@@ -60,26 +59,24 @@ class user_model():
         else:
             return make_response({"message":"NOTHING_TO_UPDATE"},204)
 
-    def upload_avatar_model(self, uid, db_path):
+    def upload_avatar_data(self, uid, db_path):
         try:
             self.cur.execute(f"UPDATE users SET avatar='{db_path}' WHERE id={uid}")
         except Exception as e:
-            print("piyush")
             print(str(e))
-            return make_response({"message": "File very large"}, 201)
         if self.cur.rowcount>0:
             return make_response({"message":"FILE_UPLOADED_SUCCESSFULLY", "path":db_path},201)
         else:
             return make_response({"message":"NOTHING_TO_UPDATE"},204)
 
-    def get_avatar_path_model(self, uid):
+    def get_avatar_path_data(self, uid):
         self.cur.execute(f"SELECT avatar FROM users WHERE id={uid}")
         result = self.cur.fetchall()
         if len(result)>0:
             print(type(result))
             return {"payload":result}
         else:
-            return "No Data Found"  
+            return make_response({"message": "No data found"}, 204)  
         
     def user_login_model(self, username, password):
         self.cur.execute(f"SELECT id, role, email, name, phone from users WHERE name='{username}' and password='{password}'")
@@ -95,5 +92,5 @@ class user_model():
             jwt_token = jwt.encode(data, dbconfig["secretKey"], algorithm="HS256")
             return make_response({"token":jwt_token}, 200)
         else:
-            return make_response({"message":"NO SUCH USER"}, 204)
+            return make_response({"message":"INVALID CREDENTIALS"}, 204)
             

@@ -11,7 +11,7 @@ class book_model():
         self.con.autocommit=True
         self.cur = self.con.cursor(dictionary=True)
         
-    def all_book_model(self):
+    def get_all_books_data(self):
         self.cur.execute("SELECT * FROM books")
         result = self.cur.fetchall()
         print(result)
@@ -20,19 +20,19 @@ class book_model():
         else:
             return json.dumps([])
     
-    def add_book_model(self,data):
+    def add_book_data(self,data):
         self.cur.execute(f"INSERT INTO books(category, name, author) VALUES('{data['category']}', '{data['name']}','{data['author']}')")        
         return make_response({"message":"CREATED_SUCCESSFULLY"},201)
     
-    def delete_book_model(self,id):
+    def delete_book_data(self,id):
         self.cur.execute(f"DELETE FROM books WHERE id={id}")
         if self.cur.rowcount>0:
             return make_response({"message":"DELETED_SUCCESSFULLY"},202)
         else:
-            return make_response({"message":"CONTACT_DEVELOPER"},500)
+            return make_response({"message":"NOT ABLE TO DELETE"},500)
         
     
-    def update_book_model(self,data, id):
+    def update_book_data(self,data, id):
         self.cur.execute(f"UPDATE books SET name='{data['name']}', category='{data['category']}', author='{data['author']}' WHERE id={id}")
         if self.cur.rowcount>0:
             return make_response({"message":"UPDATED_SUCCESSFULLY"},201)
@@ -66,4 +66,4 @@ class book_model():
             jwt_token = jwt.encode(data, dbconfig["secretKey"], algorithm="HS256")
             return make_response({"token":jwt_token}, 200)
         else:
-            return make_response({"message":"NO SUCH USER"}, 204)
+            return make_response({"message":"USER DOES NOT EXIST"}, 204)
