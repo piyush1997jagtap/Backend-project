@@ -56,7 +56,8 @@ def upload_avatar(uid):
     split_filename = file.filename.split(".") # Spliting ORIGINAL filename to seperate extenstion
     ext_pos = len(split_filename)-1 # Canlculating last index of the list got by splitting the filname
     ext = split_filename[ext_pos] # Using last index to get the file extension
-    if(ext != "jpg" or ext != "jpeg"):
+    allowedExtensions = ["jpg", "jpeg"]
+    if ext not in allowedExtensions:
           return make_response({"message": "File must be in jpg or jpeg format"}, 413)
     else:
         db_path = f"uploads/{new_filename}.{ext}"
