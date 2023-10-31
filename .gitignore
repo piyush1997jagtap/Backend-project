@@ -1,0 +1,4 @@
+venv/
+Uploads/
+__pycache__/
+*.docx
